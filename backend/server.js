@@ -1,7 +1,8 @@
 const http = require('http');
+const app = require('./app'); //importation de l'application
 
-const server = http.createServer((req, res) => {
-    res.end('Server in action!');
-});
+app.set('port', process.env.PORT || 3000); // configuration des ports utilisés par l'application
+
+const server = http.createServer(app);
 
 server.listen(process.env.PORT || 3000);
