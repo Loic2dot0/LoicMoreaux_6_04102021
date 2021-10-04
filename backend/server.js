@@ -4,4 +4,4 @@ const server = http.createServer((req, res) => {
     res.end('Server in action!');
 });
 
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
