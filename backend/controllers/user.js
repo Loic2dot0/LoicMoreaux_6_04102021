@@ -20,5 +20,26 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    res.json({ message: 'Log User'});
+    User.findOne({email: req.body.email}) //On recherche 'utilisateur dans la DB
+        .then(user => {
+            if(!user){ //Si l'email n'existe pas dans la DB
+                return res.status(401).json({error: 'User not found'}); //401 Unauthorized
+            }
+            bcrypt.compare(req.body.password, user.password)
+                .then(valid => { //résultat booléen
+                    if(!valid){ // si mot de passe incorrect on retourne une erreur
+                        return res.status(401).json({error: 'Incorrect password'});
+                    }
+                    res.status(200).json({ //Si True, on renvoi un objet contenant l'id et le token
+                        userId: user._id,
+                        token: jwt.sign( //fonction de Jsontoken
+                            {userId: user._id}, // données a encoder
+                            'HJ3X7FGu3xTflm9ZMT5sgZs6AAVPBx4Z17nV', //clé d'encodage
+                            {expiresIn: '24h'} // expiration du token
+                        )
+                    }); 
+                })
+                .catch(error => res.status(500).json({error}));
+        })
+        .catch(error => res.status(500).json({error}));
 };
