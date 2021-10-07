@@ -1,5 +1,5 @@
 /* Sauce = {
-    userId: String, // id créé par MongoDB
+    userId: String, // id de l'utilisateur qui a créé la sauce
     name: String, // nom de la sauce
     manufacturer: String, // Fabricant de la sauce
     description: String, // Description de la sauce
@@ -16,6 +16,7 @@
 const mongoose = require('mongoose');
 
 const sauceSchema = mongoose.Schema({
+    userId: {type: String, required: true},
     name: {type: String, required: true}, 
     manufacturer: {type: String, required: true},
     description: {type: String, required: true}, 
