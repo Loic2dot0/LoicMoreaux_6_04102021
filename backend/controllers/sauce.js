@@ -36,27 +36,21 @@ exports.createSauce = (req, res, next) => {
 
 exports.modifySauce = (req, res, next) => {
     console.log('modification in progress');
-    let sauceObject = {};
-    if(req.file){
-        console.log('File !');
-        sauceObject = {
-            name: JSON.parse(req.body.sauce).name, 
-            manufacturer: JSON.parse(req.body.sauce).manufacturer,
-            description: JSON.parse(req.body.sauce).description, 
-            mainPepper: JSON.parse(req.body.sauce).mainPepper,
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-            heat: JSON.parse(req.body.sauce).heat
-        };
-    } else{
-        console.log('Data only !');
-        sauceObject = {
-            name: req.body.name, 
-            manufacturer: req.body.manufacturer,
-            description: req.body.description, 
-            mainPepper: req.body.mainPepper,
-            heat: req.body.heat
-        };    
-    };
+    const sauceObject = req.file ?
+    {
+        name: JSON.parse(req.body.sauce).name, 
+        manufacturer: JSON.parse(req.body.sauce).manufacturer,
+        description: JSON.parse(req.body.sauce).description, 
+        mainPepper: JSON.parse(req.body.sauce).mainPepper,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        heat: JSON.parse(req.body.sauce).heat
+    } : {
+        name: req.body.name, 
+        manufacturer: req.body.manufacturer,
+        description: req.body.description, 
+        mainPepper: req.body.mainPepper,
+        heat: req.body.heat
+    };    
     console.log(sauceObject);
     res.status(200).json({message: "Sauce modifiée !"});
 };
