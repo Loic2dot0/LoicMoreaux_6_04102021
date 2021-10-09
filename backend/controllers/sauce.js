@@ -80,4 +80,39 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 exports.rateSauce = (req, res, next) => {
+    console.log('id sauce : ' + req.params.id);
+    console.log('UserId : ' + req.body.userId);
+    console.log(req.body.like);
+
+    Sauce.findById(req.params.id) //on recherche une sauce par son Id
+        .then(sauce => {
+            switch(req.body.like){
+                case 1:
+                    if(!sauce.usersLiked.includes(req.body.userId)){
+                        console.log(true);
+                        sauce.likes ++;
+                        console.log(sauce.usersLiked);
+                        sauce.usersLiked.push(req.body.userId);
+                        Sauce.updateOne({_id: req.params.id}, {likes: sauce.likes, usersLiked: sauce.usersLiked})
+                            .then(res.status(200).json({message: "Like"}))
+                            .catch(error => res.status(400).json({error}));
+                        console.log('like');
+                    }
+                    else {
+                        console.log('No rating');
+                        res.status(200).json({message: "No Rating"});
+                    }
+                    break;
+                case 0:
+                    console.log('Unlike');
+                    res.status(200).json({message: "Rating"});
+                    break;
+                case -1:
+                    console.log('Dislike');
+                    res.status(200).json({message: "Rating"});
+                    break;
+            }
+            
+        })
+        .catch(error => res.status(400).json({error}));
 };
