@@ -108,9 +108,20 @@ exports.rateSauce = (req, res, next) => {
                     res.status(200).json({message: "Rating"});
                     break;
                 case -1:
-                    console.log('Dislike');
-                    res.status(200).json({message: "Rating"});
-                    break;
+                    if(!sauce.usersDisliked.includes(req.body.userId)){
+                        console.log(true);
+                        sauce.dislikes ++;
+                        console.log(sauce.usersDisliked);
+                        sauce.usersDisliked.push(req.body.userId);
+                        Sauce.updateOne({_id: req.params.id}, {dislikes: sauce.dislikes, usersDisliked: sauce.usersDisliked})
+                            .then(res.status(200).json({message: "Dislike"}))
+                            .catch(error => res.status(400).json({error}));
+                        console.log('Dislike');
+                    }
+                    else {
+                        console.log('No rating');
+                        res.status(200).json({message: "No Rating"});
+                    }
             }
             
         })
