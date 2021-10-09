@@ -35,6 +35,15 @@ exports.createSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
+    if(req.file){ //si on reçois un fichier image on supprime le précédent
+        Sauce.findById(req.params.id) 
+        .then(sauce => {
+            const filename = sauce.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {console.log('Fichier image supprimé')});
+        })
+        .catch(error => res.status(400).json({error}));
+    }
+
     const sauceObject = req.file ?
     {
         name: JSON.parse(req.body.sauce).name, 
