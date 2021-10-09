@@ -1,5 +1,5 @@
 const Sauce = require('../models/Sauce'); //import du modèle sauce
-
+const fs = require('fs'); //fs = file system
 
 exports.getAllSauce = (req, res, next) => {
     Sauce.find() //on recherche tous les modèles Sauce dans la DB
@@ -58,8 +58,15 @@ exports.modifySauce = (req, res, next) => {
 };
 
 exports.deleteSauce = (req, res, next) => {
-    Sauce.deleteOne({_id: req.params.id})
-        .then(res.status(200).json({message: "Sauce supprimée !"}))
+    Sauce.findById(req.params.id) // On recherche d'abord la sauce pour supprimer le fichier image
+        .then(sauce => {
+            const filename = sauce.imageUrl.split('/images/')[1]; // on extrait le nom du fichier à supprimer
+            fs.unlink(`images/${filename}`, () =>{ // suppression du fichier image
+                Sauce.deleteOne({_id: req.params.id}) // on supprime la sauce de la DB
+                    .then(res.status(200).json({message: "Sauce supprimée !"}))
+                    .catch(error => res.status(400).json({error}));
+            });
+        })
         .catch(error => res.status(400).json({error}));
 };
 
