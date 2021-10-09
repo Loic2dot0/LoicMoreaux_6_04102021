@@ -35,7 +35,6 @@ exports.createSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
-    console.log('modification in progress');
     const sauceObject = req.file ?
     {
         name: JSON.parse(req.body.sauce).name, 
@@ -50,9 +49,12 @@ exports.modifySauce = (req, res, next) => {
         description: req.body.description, 
         mainPepper: req.body.mainPepper,
         heat: req.body.heat
-    };    
-    console.log(sauceObject);
-    res.status(200).json({message: "Sauce modifiée !"});
+    };
+    //console.log(sauceObject);
+    //console.log(req.params.id);
+    Sauce.updateOne({_id: req.params.id}, sauceObject)
+        .then(res.status(200).json({message: "Sauce modifiée !"}))
+        .catch(error => res.status(400).json({error}));
 };
 
 exports.deleteSauce = (req, res, next) => {
