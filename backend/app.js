@@ -5,7 +5,10 @@ const path = require('path');
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
-mongoose.connect('mongodb+srv://Loic2dot0:n4T3PV6Rn7x7kpE@cluster0.vjlu7.mongodb.net/piiquanteDB?retryWrites=true&w=majority',
+
+const MongoDb = ''; //données de connection mongoDB
+
+mongoose.connect(MongoDb,
     { useNewUrlParser: true,
       useUnifiedTopology: true })
     .then(() => console.log('Réussite de la connexion MongoDB'))
