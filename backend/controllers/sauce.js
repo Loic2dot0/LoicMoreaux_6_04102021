@@ -89,7 +89,6 @@ exports.rateSauce = (req, res, next) => {
             switch(req.body.like){
                 case 1:
                     if(!sauce.usersLiked.includes(req.body.userId)){
-                        console.log(true);
                         sauce.likes ++;
                         console.log(sauce.usersLiked);
                         sauce.usersLiked.push(req.body.userId);
@@ -104,12 +103,26 @@ exports.rateSauce = (req, res, next) => {
                     }
                     break;
                 case 0:
-                    console.log('Unlike');
-                    res.status(200).json({message: "Rating"});
+                    if(sauce.usersLiked.includes(req.body.userId)){
+                        sauce.likes --;
+                        let indexUsersLiked = sauce.usersLiked.indexOf(req.body.userId);
+                        sauce.usersLiked.splice(indexUsersLiked,1);
+                        Sauce.updateOne({_id: req.params.id}, {likes: sauce.likes, usersLiked: sauce.usersLiked})
+                            .then(res.status(200).json({message: "Unlike"}))
+                            .catch(error => res.status(400).json({error}));
+                        console.log('Unlike Like');
+                    } else if(sauce.usersDisliked.includes(req.body.userId)){
+                        sauce.dislikes --;
+                        let indexUsersDisliked = sauce.usersDisliked.indexOf(req.body.userId);
+                        sauce.usersDisliked.splice(indexUsersDisliked,1);
+                        Sauce.updateOne({_id: req.params.id}, {dislikes: sauce.dislikes, usersDisliked: sauce.usersDisliked})
+                            .then(res.status(200).json({message: "Unlike"}))
+                            .catch(error => res.status(400).json({error}));
+                            console.log('Unlike Dislike');
+                    } else res.status(200).json({message: "Rating"});
                     break;
                 case -1:
                     if(!sauce.usersDisliked.includes(req.body.userId)){
-                        console.log(true);
                         sauce.dislikes ++;
                         console.log(sauce.usersDisliked);
                         sauce.usersDisliked.push(req.body.userId);
