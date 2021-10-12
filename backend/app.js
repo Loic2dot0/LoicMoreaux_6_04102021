@@ -5,8 +5,7 @@ const path = require('path');
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
-
-const MongoDb = ''; //données de connection mongoDB
+const MongoDb = require('./utils/mongo');
 
 mongoose.connect(MongoDb,
     { useNewUrlParser: true,

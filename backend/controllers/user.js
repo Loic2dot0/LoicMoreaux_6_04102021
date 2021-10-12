@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt'); // Ajout de bcrypt pour le chriffrage du mot de passe
 const salt = 10; //Nombre de tour pour le salage du mot du hash
 const jwt = require('jsonwebtoken'); // Ajout de jsonwebtoken pour la gestion des token
+const tokenKey = require('../utils/token');
 
 const User = require('../models/User'); //import du modèle user
 
@@ -34,7 +35,7 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         token: jwt.sign( //fonction de Jsontoken
                             {userId: user._id}, // données a encoder
-                            'HJ3X7FGu3xTflm9ZMT5sgZs6AAVPBx4Z17nV', //clé d'encodage
+                            tokenKey, //clé d'encodage
                             {expiresIn: '24h'} // expiration du token
                         )
                     }); 
