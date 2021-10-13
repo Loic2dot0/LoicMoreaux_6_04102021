@@ -28,7 +28,7 @@ exports.createSauce = (req, res, next) => {
         usersLiked: [],
         usersDisliked: []
     })
-    //console.log(sauce);
+    
     sauce.save()
         .then(() => res.status(200).json({message: "Nouvelle sauce ajoutée !"}))
         .catch(error => res.status(400).json({error}));
@@ -59,8 +59,7 @@ exports.modifySauce = (req, res, next) => {
         mainPepper: req.body.mainPepper,
         heat: req.body.heat
     };
-    //console.log(sauceObject);
-    //console.log(req.params.id);
+
     Sauce.updateOne({_id: req.params.id}, sauceObject)
         .then(res.status(200).json({message: "Sauce modifiée !"}))
         .catch(error => res.status(400).json({error}));
@@ -80,25 +79,18 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 exports.rateSauce = (req, res, next) => {
-    console.log('id sauce : ' + req.params.id);
-    console.log('UserId : ' + req.body.userId);
-    console.log(req.body.like);
-
     Sauce.findById(req.params.id) //on recherche une sauce par son Id
         .then(sauce => {
             switch(req.body.like){
                 case 1:
                     if(!sauce.usersLiked.includes(req.body.userId)){
                         sauce.likes ++;
-                        console.log(sauce.usersLiked);
                         sauce.usersLiked.push(req.body.userId);
                         Sauce.updateOne({_id: req.params.id}, {likes: sauce.likes, usersLiked: sauce.usersLiked})
                             .then(res.status(200).json({message: "Like"}))
                             .catch(error => res.status(400).json({error}));
-                        console.log('like');
                     }
                     else {
-                        console.log('No rating');
                         res.status(200).json({message: "No Rating"});
                     }
                     break;
@@ -110,7 +102,6 @@ exports.rateSauce = (req, res, next) => {
                         Sauce.updateOne({_id: req.params.id}, {likes: sauce.likes, usersLiked: sauce.usersLiked})
                             .then(res.status(200).json({message: "Unlike"}))
                             .catch(error => res.status(400).json({error}));
-                        console.log('Unlike Like');
                     } else if(sauce.usersDisliked.includes(req.body.userId)){
                         sauce.dislikes --;
                         let indexUsersDisliked = sauce.usersDisliked.indexOf(req.body.userId);
@@ -118,21 +109,17 @@ exports.rateSauce = (req, res, next) => {
                         Sauce.updateOne({_id: req.params.id}, {dislikes: sauce.dislikes, usersDisliked: sauce.usersDisliked})
                             .then(res.status(200).json({message: "Unlike"}))
                             .catch(error => res.status(400).json({error}));
-                            console.log('Unlike Dislike');
                     } else res.status(200).json({message: "Rating"});
                     break;
                 case -1:
                     if(!sauce.usersDisliked.includes(req.body.userId)){
                         sauce.dislikes ++;
-                        console.log(sauce.usersDisliked);
                         sauce.usersDisliked.push(req.body.userId);
                         Sauce.updateOne({_id: req.params.id}, {dislikes: sauce.dislikes, usersDisliked: sauce.usersDisliked})
                             .then(res.status(200).json({message: "Dislike"}))
                             .catch(error => res.status(400).json({error}));
-                        console.log('Dislike');
                     }
                     else {
-                        console.log('No rating');
                         res.status(200).json({message: "No Rating"});
                     }
             }
