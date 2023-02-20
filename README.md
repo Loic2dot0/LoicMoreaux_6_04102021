@@ -1,6 +1,7 @@
 # HOT TAKES #
+Student Project 6 for [OpenClassrooms](https://openclassrooms.com) "Build a secure API for a food review app".
+The backend uses Node.js, Express, Mongoose.
 
-This is the back end for the project 6 "Build a secure API for a food review app".
 For the front end, clone amd install this repo :
 https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6
 
